@@ -1,3 +1,4 @@
+<%@page import="java.io.File"%>
 <%@page import="java.sql.*,java.util.*"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
@@ -19,7 +20,7 @@
             background-color: rgb(245, 245, 245);
         }
         table{
-            margin-top: 5%; 
+            margin-top: 2%; 
         }
         img{
             margin-left: 20%;
@@ -71,14 +72,16 @@
         PreparedStatement selectId = conn.prepareStatement("select * from report where DATE between '"+start+"' and '"+end+"';");
         ResultSet rs = selectId.executeQuery();
         %>
-        <body>
-            <div class="image" >
-                <img src="logo.jpeg" alt="logo"/>
-            </div>
+        <body><br>
+            <center class="image" >
+                <h3><b>St. Joseph's Institute of Technology</b></h3>
+                <h5>(St. Joseph's Group of Institutions)</h5>
+                <h5><b>OMR, Chennai - 600 119</b></h3>
+            </center><br>
         <center>
-            <h1>
+            <h4><b>
                 Inventory Report
-            </h1>
+            </b></h4>
         </center>
             <div class="container">
                 <div class="table-responsive">
@@ -135,9 +138,18 @@
             </div>
             <br><br>
             <center>
-                <button id="btn">
-                    Download Report
-                </button>
+                <%
+                    if(request.getParameter("word")==null){
+                %>
+                <form action="report.jsp" method="post">
+                    <input type="hidden" value="yes" name="word" />
+                    <input type="hidden" value="<%=start%>" name="start" />
+                    <input type="hidden" value="<%=end%>" name="end" />
+                    <input type="submit" value="Download Report" />
+                </form>
+                <%
+                    }
+                %>
             </center>
             <br><br><br><br>
         <%
@@ -146,7 +158,15 @@
         System.out.print(e);
         e.printStackTrace();
     }
- %>
+    String a1 = request.getParameter("word");
+    if (a1 != null) {
+        if (a1.equals("yes")) {
+            File filepath = new File("Report.doc");
+            response.setContentType("application/vnd.ms-word");
+            response.setHeader("Content-Disposition", "inline; filename=" + filepath);
+        }
+    }
+        %>
 
 </body>
 </html>
